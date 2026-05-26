@@ -1,0 +1,20 @@
+{
+  "name": "stikqc",
+  "version": "1.0.0",
+  "description": "Sticker Quality Monitoring Dashboard",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8080 -c-1",
+    "dev": "http-server -p 8080 -c-1 -o"
+  },
+  "keywords": [
+    "quality",
+    "monitoring",
+    "sticker"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

@@ -55,7 +55,7 @@ function KpiRow() {
     { label: 'NG Count', num: ng.toLocaleString(), icon: 'circle-x', tone: 'ng', delta: { dir: 'down', text: '+12 vs yesterday' } },
     { label: 'Yield', num: yld.toFixed(2) + '%', icon: 'trending-up', tone, delta: { dir: 'up', text: '+0.4% vs target 98%' } },
     { label: 'Avg Cycle Time', num: '0.82s', icon: 'timer', delta: { dir: 'up', text: '−0.04s vs last hour' } },
-    { label: 'Throughput / hr', num: '1,240', icon: 'gauge', delta: { dir: 'up', text: '+3.1% vs target' } },
+    // { label: 'Throughput / hr', num: '1,240', icon: 'gauge', delta: { dir: 'up', text: '+3.1% vs target' } },
   ];
   return (
     <div className="kpi-grid">
@@ -123,14 +123,14 @@ function LineCard({ line, onView }) {
         </span>
       </div>
 
-      <div style={{ display: 'flex', gap: 6 }}>
+      {/* <div style={{ display: 'flex', gap: 6 }}>
         <button className="btn sm" style={{ flex: 1 }} onClick={() => onView?.(line)}>
           <Icon name="bar-chart-2" size={13} /> Details
         </button>
         <button className="btn sm">
           <Icon name="video" size={13} /> Live Feed
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -181,49 +181,49 @@ function YieldByLineChart() {
   );
 }
 
-function DefectDonut() {
-  const data = window.MOCK.DEFECT_DIST;
-  const total = data.reduce((s, d) => s + d.value, 0);
-  return (
-    <div className="card">
-      <div className="card-head"><h3>Defect Distribution</h3><span className="sub">— today</span></div>
-      <div className="card-body" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <div style={{ position: 'relative', width: 200, height: 200 }}>
-          <DonutChart data={data} size={200} total={total} />
-          <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', pointerEvents: 'none' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em' }}>{total}</div>
-              <div className="faint text-xs">Total NG</div>
-            </div>
-          </div>
-        </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {data.map((d, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12.5 }}>
-              <span className="legend-swatch" style={{ background: d.color }} />
-              <span style={{ flex: 1 }}>{d.name}</span>
-              <span className="num mono faint">{d.value}</span>
-              <span className="faint text-xs" style={{ width: 38, textAlign: 'right' }}>{((d.value / total) * 100).toFixed(0)}%</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+// function DefectDonut() {
+//   const data = window.MOCK.DEFECT_DIST;
+//   const total = data.reduce((s, d) => s + d.value, 0);
+//   return (
+//     <div className="card">
+//       <div className="card-head"><h3>Defect Distribution</h3><span className="sub">— today</span></div>
+//       <div className="card-body" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+//         <div style={{ position: 'relative', width: 200, height: 200 }}>
+//           <DonutChart data={data} size={200} total={total} />
+//           <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', pointerEvents: 'none' }}>
+//             <div style={{ textAlign: 'center' }}>
+//               <div style={{ fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em' }}>{total}</div>
+//               <div className="faint text-xs">Total NG</div>
+//             </div>
+//           </div>
+//         </div>
+//         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+//           {data.map((d, i) => (
+//             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12.5 }}>
+//               <span className="legend-swatch" style={{ background: d.color }} />
+//               <span style={{ flex: 1 }}>{d.name}</span>
+//               <span className="num mono faint">{d.value}</span>
+//               <span className="faint text-xs" style={{ width: 38, textAlign: 'right' }}>{((d.value / total) * 100).toFixed(0)}%</span>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
-function HourlyThroughput() {
-  const palette = ['#0f766e', '#2563eb', '#9333ea', '#ea580c'];
-  const series = ['L01', 'L02', 'L03', 'L04'].map((k, i) => ({ key: k, label: `Line ${k.slice(1)}`, color: palette[i] }));
-  return (
-    <div className="card">
-      <div className="card-head"><h3>Hourly Throughput</h3><span className="sub">— pieces per hour by line</span></div>
-      <div className="card-body" style={{ paddingTop: 20 }}>
-        <MultiLineChart data={window.MOCK.THROUGHPUT} series={series} height={270} target={400} />
-      </div>
-    </div>
-  );
-}
+// function HourlyThroughput() {
+//   const palette = ['#0f766e', '#2563eb', '#9333ea', '#ea580c'];
+//   const series = ['L01', 'L02', 'L03', 'L04'].map((k, i) => ({ key: k, label: `Line ${k.slice(1)}`, color: palette[i] }));
+//   return (
+//     <div className="card">
+//       <div className="card-head"><h3>Hourly Throughput</h3><span className="sub">— pieces per hour by line</span></div>
+//       <div className="card-body" style={{ paddingTop: 20 }}>
+//         <MultiLineChart data={window.MOCK.THROUGHPUT} series={series} height={270} target={400} />
+//       </div>
+//     </div>
+//   );
+// }
 
 function NGFeed({ onOpen }) {
   return (

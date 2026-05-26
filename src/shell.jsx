@@ -13,7 +13,6 @@ function Sidebar({ active, setActive, collapsed, setCollapsed }) {
     { section: 'Admin' },
     { id: 'master', label: 'Master Data', icon: 'database' },
     { id: 'users', label: 'User Management', icon: 'users-round' },
-    { id: 'settings', label: 'System Settings', icon: 'settings-2' },
   ];
   return (
     <aside className="sidebar" aria-label="Sidebar">

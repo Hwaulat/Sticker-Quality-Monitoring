@@ -46,12 +46,12 @@ function LivePanel({ line }) {
         </div>
       </div>
 
-      <div className="strip">
+      {/* <div className="strip">
         <div className="label">Recent 30 verdicts</div>
         <div className="recent-dots">
           {dots.map((s, i) => <span key={i} className={`v ${s === 'ng' ? 'ng' : ''}`} title={`#${i + 1}`} />)}
         </div>
-      </div>
+      </div> */}
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 6 }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>

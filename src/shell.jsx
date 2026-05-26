@@ -13,15 +13,15 @@ function Sidebar({ active, setActive, collapsed, setCollapsed }) {
     { section: 'Admin' },
     { id: 'master', label: 'Master Data', icon: 'database' },
     { id: 'users', label: 'User Management', icon: 'users-round' },
-    { id: 'settings', label: 'System Settings', icon: 'settings-2' },
+    // { id: 'settings', label: 'System Settings', icon: 'settings-2' },
   ];
   return (
     <aside className="sidebar" aria-label="Sidebar">
       <div className="brand">
         <div className="brand-mark"></div>
         <div className="brand-text">
-          <span>StikQC</span>
-          <small>Quality Monitoring</small>
+          <span>Quality</span>
+          <small>Monitoring System</small>
         </div>
       </div>
       <nav className="nav">
@@ -68,21 +68,9 @@ function Topbar({ crumbs, theme, setTheme, onLive, notifOpen, setNotifOpen }) {
 
       <div className="spacer" />
 
-      <div className="search" tabIndex={0} role="searchbox" aria-label="Global search">
-        <Icon name="search" size={14} />
-        <span>Cari inspection number, SKU, line…</span>
-        <kbd>⌘K</kbd>
-      </div>
-
-      <span className="health-pill" title="All MQTT brokers + cameras online">
-        <span className="dot" /> System Healthy
-      </span>
-
       <button className="btn ghost sm" onClick={onLive} title="Open fullscreen live view">
         <Icon name="maximize" size={14} /> Live Wall
       </button>
-
-      <div style={{ width: 1, height: 24, background: 'var(--border)' }} />
 
       {/* Order from RIGHT to LEFT: theme → notif → user (per requirements) */}
       <button

@@ -90,9 +90,9 @@ function Live({ onExit }) {
 
         <div style={{ width: 1, height: 24, background: 'var(--border)' }} />
 
-        <button className="btn sm ghost" onClick={() => setAudio(a => !a)} title="Toggle audible alarms">
+        {/* <button className="btn sm ghost" onClick={() => setAudio(a => !a)} title="Toggle audible alarms">
           <Icon name={audio ? 'volume-2' : 'volume-x'} size={14} /> Audio
-        </button>
+        </button> */}
         <button className="btn sm ghost" onClick={onExit}>
           <Icon name="minimize-2" size={14} /> Exit Fullscreen
         </button>

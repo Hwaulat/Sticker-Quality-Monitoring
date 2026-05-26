@@ -37,7 +37,7 @@ function Defects() {
         <div className="row gap-2">
           <span className="badge ng dot">{queue.length} unreviewed</span>
           <span className="badge ok dot">22 reviewed today</span>
-          <button className="btn sm"><Icon name="settings-2" size={13} /> Thresholds</button>
+          {/* <button className="btn sm"><Icon name="settings-2" size={13} /> Thresholds</button> */}
         </div>
       </div>
 

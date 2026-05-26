@@ -29,12 +29,12 @@ function FilterBar({ filters, setFilters, right }) {
           value={filters.type}
           onChange={(v) => setFilters(f => ({ ...f, type: v }))}
         />
-        <div className="field">
+        {/* <div className="field">
           <Icon name="sticker" size={14} />
           <span className="field-label">SKU</span>
           <span>All</span>
           <Icon name="chevron-down" size={13} />
-        </div>
+        </div> */}
         <div style={{ flex: 1 }} />
         <span className="badge ok dot" style={{ fontWeight: 500 }}>
           Live · streaming
@@ -55,7 +55,7 @@ function KpiRow() {
     { label: 'NG Count', num: ng.toLocaleString(), icon: 'circle-x', tone: 'ng', delta: { dir: 'down', text: '+12 vs yesterday' } },
     { label: 'Yield', num: yld.toFixed(2) + '%', icon: 'trending-up', tone, delta: { dir: 'up', text: '+0.4% vs target 98%' } },
     { label: 'Avg Cycle Time', num: '0.82s', icon: 'timer', delta: { dir: 'up', text: '−0.04s vs last hour' } },
-    // { label: 'Throughput / hr', num: '1,240', icon: 'gauge', delta: { dir: 'up', text: '+3.1% vs target' } },
+    { label: 'Throughput / hr', num: '1,240', icon: 'gauge', delta: { dir: 'up', text: '+3.1% vs target' } },
   ];
   return (
     <div className="kpi-grid">
@@ -107,13 +107,6 @@ function LineCard({ line, onView }) {
         <div className="stat"><div className="v" style={{ color: 'var(--ng)' }}>{line.ng.toLocaleString()}</div><div className="l">NG</div></div>
       </div>
 
-      <div className="verdict-strip" aria-label="Recent verdicts">
-        {Array.from({ length: 24 }).map((_, i) => {
-          const ng = (line.alarm && [3, 7, 11, 14, 18, 21].includes(i)) || (!line.alarm && (i === 4 || i === 17));
-          return <span key={i} className={`v ${ng ? 'ng' : ''}`} title={`Inspection ${i}`} />;
-        })}
-      </div>
-
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingTop: 4, borderTop: '1px solid var(--border)' }}>
         <Icon name="user" size={13} className="faint" />
         <span className="text-xs muted">{line.operator}</span>
@@ -122,15 +115,6 @@ function LineCard({ line, onView }) {
           {line.lastInspectionSec != null ? `${line.lastInspectionSec}s ago` : 'idle'}
         </span>
       </div>
-
-      {/* <div style={{ display: 'flex', gap: 6 }}>
-        <button className="btn sm" style={{ flex: 1 }} onClick={() => onView?.(line)}>
-          <Icon name="bar-chart-2" size={13} /> Details
-        </button>
-        <button className="btn sm">
-          <Icon name="video" size={13} /> Live Feed
-        </button>
-      </div> */}
     </div>
   );
 }
@@ -184,84 +168,50 @@ function YieldByLineChart() {
 function DefectDonut() {
   const data = window.MOCK.DEFECT_DIST;
   const total = data.reduce((s, d) => s + d.value, 0);
-  return (
-    <div className="card">
-      <div className="card-head"><h3>Defect Distribution</h3><span className="sub">— today</span></div>
-      <div className="card-body" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <div style={{ position: 'relative', width: 200, height: 200 }}>
-          <DonutChart data={data} size={200} total={total} />
-          <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', pointerEvents: 'none' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em' }}>{total}</div>
-              <div className="faint text-xs">Total NG</div>
-            </div>
-          </div>
-        </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {data.map((d, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12.5 }}>
-              <span className="legend-swatch" style={{ background: d.color }} />
-              <span style={{ flex: 1 }}>{d.name}</span>
-              <span className="num mono faint">{d.value}</span>
-              <span className="faint text-xs" style={{ width: 38, textAlign: 'right' }}>{((d.value / total) * 100).toFixed(0)}%</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function HourlyThroughput() {
   const palette = ['#0f766e', '#2563eb', '#9333ea', '#ea580c'];
   const series = ['L01', 'L02', 'L03', 'L04'].map((k, i) => ({ key: k, label: `Line ${k.slice(1)}`, color: palette[i] }));
-  return (
-    <div className="card">
-      <div className="card-head"><h3>Hourly Throughput</h3><span className="sub">— pieces per hour by line</span></div>
-      <div className="card-body" style={{ paddingTop: 20 }}>
-        <MultiLineChart data={window.MOCK.THROUGHPUT} series={series} height={270} target={400} />
-      </div>
-    </div>
-  );
 }
 
-function NGFeed({ onOpen }) {
+function RecentNGTable({ onOpen, maxRows = 10 }) {
+  const rows = (window.MOCK.RECENT_NG || []).slice(0, maxRows);
   return (
     <div className="card">
       <div className="card-head">
         <h3>Recent NG Events</h3>
-        <span className="sub">— live feed</span>
+        <span className="sub">— latest {rows.length} events</span>
         <div style={{ flex: 1 }} />
-        <button className="btn sm ghost">Filter <Icon name="chevron-down" size={12} /></button>
-        <button className="btn sm">View all NG</button>
+        <button className="btn sm ghost">View all NG</button>
       </div>
-      <div className="ng-feed">
-        {window.MOCK.RECENT_NG.map((row, i) => (
-          <div key={row.id} className="ng-row" onClick={() => onOpen?.(row)}>
-            <StickerThumb type={row.type} ng />
-            <div className="meta">
-              <div className="first">
-                <span className="id mono">{row.id}</span>
-                <Badge kind="ng" dot>NG</Badge>
-                <span className="muted">·</span>
-                <span>{row.lineName}</span>
-                <span className="muted">·</span>
-                <span>{row.type === 'small' ? 'Small' : 'Medium'}</span>
-              </div>
-              <div className="second">
-                {row.defects.map(d => {
-                  const def = window.MOCK.DEFECT_CATEGORIES.find(c => c.code === d);
-                  return <span key={d}><Badge kind="">{def?.name || d}</Badge></span>;
-                })}
-                <span>·</span>
-                <span>conf {(row.confidence * 100).toFixed(0)}%</span>
-                <span>·</span>
-                <span>{row.operator}</span>
-              </div>
-            </div>
-            <div className="time">{window.fmtAgo(row.ts)}</div>
-          </div>
-        ))}
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+          <thead>
+            <tr style={{ background: 'var(--surface-2)', borderBottom: '1px solid var(--border)' }}>
+              <th style={{ padding: '10px 12px', textAlign: 'left' }}>ID</th>
+              <th style={{ padding: '10px 12px', textAlign: 'left' }}>Time</th>
+              <th style={{ padding: '10px 12px', textAlign: 'left' }}>Line</th>
+              <th style={{ padding: '10px 12px', textAlign: 'left' }}>Size</th>
+              <th style={{ padding: '10px 12px', textAlign: 'left' }}>Defects</th>
+              <th style={{ padding: '10px 12px', textAlign: 'center' }}>Conf</th>
+              <th style={{ padding: '10px 12px', textAlign: 'left' }}>Operator</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={r.id} style={{ borderBottom: '1px solid var(--border)', background: i % 2 === 0 ? 'transparent' : 'var(--surface-2)', cursor: 'pointer' }} onClick={() => onOpen?.(r)}>
+                <td style={{ padding: '10px 12px', fontFamily: 'monospace', fontSize: 12 }}>{r.id}</td>
+                <td style={{ padding: '10px 12px', color: 'var(--text-muted)', fontSize: 12 }}>{new Date(r.ts).toLocaleString()}</td>
+                <td style={{ padding: '10px 12px', fontSize: 13 }}>{r.lineName}</td>
+                <td style={{ padding: '10px 12px', fontSize: 13 }}>{r.type === 'small' ? 'Small' : 'Medium'}</td>
+                <td style={{ padding: '10px 12px', fontSize: 13 }}>{r.defects.map(d => (window.MOCK.DEFECT_CATEGORIES.find(c => c.code === d)?.name || d)).join(', ') || '—'}</td>
+                <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 12 }}>{(r.confidence * 100).toFixed(0)}%</td>
+                <td style={{ padding: '10px 12px', fontSize: 13 }}>{r.operator}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
@@ -289,20 +239,24 @@ function Dashboard({ openInspection }) {
 
       <div style={{ marginTop: 14 }}>
         <SectionHead title="Live Line Status" sub="6 lines · 4 running · 1 maintenance · 1 calibrating"
-          right={<ToggleGroup options={['Grid', 'Compact']} value="Grid" onChange={() => {}} />} />
+          right={<ToggleGroup options={['', '']} value="Grid" onChange={() => {}} />} />
         <div className="lines-row">
           {window.MOCK.LINES.map(l => <LineCard key={l.id} line={l} />)}
         </div>
       </div>
 
-      <div style={{ marginTop: 18 }} className="grid-2">
+      <div style={{ marginTop: 18 }}>
         <TrendChart />
-        <NGFeed onOpen={openInspection} />
       </div>
 
       <div style={{ marginTop: 14 }} className="grid-2">
         <ParetoChart />
         <YieldByLineChart />
+      </div>
+
+      {/* Recent NG table placed below Pareto and Yield by Line */}
+      <div style={{ marginTop: 14 }}>
+        <RecentNGTable onOpen={openInspection} maxRows={10} />
       </div>
 
       <div style={{ marginTop: 14 }} className="grid-2">
